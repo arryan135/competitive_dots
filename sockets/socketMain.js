@@ -4,6 +4,10 @@ let orbs = [];
 
 initGame();
 
+io.sockets.on("connect",  socket => {
+  socket.emit("init", {orbs});
+})
+
 // begin at the start of every game
 function initGame(){
   for (let i = 0; i < 500; i++){

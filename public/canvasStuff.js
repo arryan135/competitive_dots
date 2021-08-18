@@ -6,12 +6,12 @@ player.locX = Math.floor(500*Math.random() + 100);
 player.locY = Math.floor(500*Math.random() + 100);
 
 const draw = () => {
-  
-  // wipe out the entire canvas everytime draw is called
-  context.clearRect(0, 0, canvas.width, canvas.height);
 
   // reset the translate done in the previous draw call
   context.setTransform(1, 0, 0, 1, 0, 0);
+
+  // wipe out the entire canvas everytime draw is called
+  context.clearRect(0, 0, canvas.width, canvas.height);
 
   // clamp the camera to the player 
   const camX = -player.locX + canvas.width/2;
@@ -27,13 +27,20 @@ const draw = () => {
   // argument 4 where to start drawing the circle in radians
   // argument 5 is where to stop drawing the circle in radians
   context.arc(player.locX, player.locY, 10, 0, Math.PI*2);
-  context.arc(200, 200, 10, 0, Math.PI*2);
   // fill the circle
   context.fill();
   context.lineWidth = 3;
   context.strokeStyle = `rgb(0,255,0)`;
   // this will put border around the circle
   context.stroke();
+
+  orbs.forEach(orb => {
+      context.beginPath();
+      context.fillStyle = orb.color;
+      context.arc(orb.locX, orb.locY, orb.radius, 0, Math.PI * 2);
+      context.fill();
+  });
+
   // recursively draw circles for every second the browser is on. 
   requestAnimationFrame(draw);
 }
