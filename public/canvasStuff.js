@@ -21,7 +21,7 @@ const draw = () => {
     // argument 3 is the radius of the circle
     // argument 4 where to start drawing the circle in radians
     // argument 5 is where to stop drawing the circle in radians
-    context.arc(player.locX, player.locY, 10, 0, Math.PI*2);
+    context.arc(player.locX, player.locY, player.radius, 0, Math.PI*2);
     // fill the circle
     context.fill();
     context.lineWidth = 3;

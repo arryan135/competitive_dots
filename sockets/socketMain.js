@@ -9,13 +9,13 @@ const checkForPlayerCollisions = require("./checkCollisions").checkForPlayerColl
 let orbs = [];
 let players = [];
 let settings = {
-  defaultOrbs: 500,
+  defaultOrbs: 5000,
   defaultSpeed: 6,
   defaultSize: 6,
   // as plyer gets big, we need to zoom out
   defaultZoom: 1.5,
-  worldWidth: 500,
-  worldHeight: 500
+  worldWidth: 5000,
+  worldHeight: 5000
 }
 
 initGame();
@@ -67,15 +67,32 @@ io.sockets.on("connect",  socket => {
       yV = player.playerConfig.yVector = data.yVector;
     
       // move the player along the line of the mouse direction
-      if ((player.playerData.locX < 5 && player.playerData.xVector < 0) || (player.playerData.locX > 500) && (xV > 0)){
+      if ((player.playerData.locX < 5 && player.playerData.xVector < 0) || (player.playerData.locX > settings.worldWidth) && (xV > 0)){
           player.playerData.locY -= speed * yV;
-      } else if((player.playerData.locY < 5 && yV > 0) || (player.playerData.locY > 500) && (yV < 0)){
+      } else if((player.playerData.locY < 5 && yV > 0) || (player.playerData.locY > settings.worldHeight) && (yV < 0)){
           player.playerData.locX += speed * xV;
       } else{
           player.playerData.locX += speed * xV;
           player.playerData.locY -= speed * yV;
       }
-      player.tickSent = true;  
+      player.tickSent = true; 
+      
+      // Orb Collison
+      let capturedOrb = checkForOrbCollisions(player.playerData, player.playerConfig, orbs, settings);
+      capturedOrb.then(data => {
+        // runs if resolve runs, a collison happened 
+
+        const orbData = {
+          orbIndex: data,
+          newOrb: orbs[data]
+        }
+        
+        // emit to all sockets the orb that needs to be replaced
+        io.sockets.emit("orbSwitch", orbData);
+      }). catch(() => {
+        // runs if reject runs, no coliision happened
+        
+      })
     } 
   });
 });
