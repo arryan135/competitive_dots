@@ -18,9 +18,17 @@ let settings = {
 
 initGame();
 
-io.sockets.on("connect",  socket => {
+// issue message to every connected socket 30 FPS
+setInterval(() => {
+  io.to("game").emit("tock", {
+    players
+  });
+}, 33); // 1/30th of a second
 
+io.sockets.on("connect",  socket => {
   socket.on("init", data => {
+    socket.join("game")
+
     let playerConfig = new PlayerConfig(settings);
     let playerData = new PlayerData(data.playerName, settings);
     let player = new Player(socket.id, playerConfig, playerData);
