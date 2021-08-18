@@ -1,10 +1,10 @@
 class Orb {
-  constructor(){
+  constructor(settings){
     // what color the orb should be
     this.color = this.getRandomColor();
     // where the orb is on the screen
-    this.locX = Math.floor(Math.random() * 500);
-    this.locY = Math.floor(Math.random() * 500);
+    this.locX = Math.floor(Math.random() * settings.worldWidth);
+    this.locY = Math.floor(Math.random() * settings.worldHeight);
     // how big will the orb be
     this.radius = 5;
   }

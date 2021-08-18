@@ -1,0 +1,1 @@
+// data about plyaer that everyone needs to know
