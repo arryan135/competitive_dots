@@ -3,6 +3,8 @@ const Orb = require("./classes/Orb");
 const Player = require("./classes/Player");
 const PlayerConfig = require("./classes/PlayerConfig");
 const PlayerData = require("./classes/PlayerData");
+const checkForOrbCollisions = require("./checkCollisions").checkForOrbCollisions;
+const checkForPlayerCollisions = require("./checkCollisions").checkForPlayerCollisions;
 
 let orbs = [];
 let players = [];
