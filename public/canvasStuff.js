@@ -1,7 +1,3 @@
-
-player.locX = Math.floor(500*Math.random() + 100);
-player.locY = Math.floor(500*Math.random() + 100);
-
 const draw = () => {
 
   // reset the translate done in the previous draw call
@@ -16,21 +12,25 @@ const draw = () => {
   // allos us to move canvas around
   context.translate(camX, camY);
 
-  // tell the context to start drawing
-  context.beginPath();
-  context.fillStyle = `rgb(255,0,0)`;
-  // arguments 1 and 2 are the radius of the circle
-  // argument 3 is the radius of the circle
-  // argument 4 where to start drawing the circle in radians
-  // argument 5 is where to stop drawing the circle in radians
-  context.arc(player.locX, player.locY, 10, 0, Math.PI*2);
-  // fill the circle
-  context.fill();
-  context.lineWidth = 3;
-  context.strokeStyle = `rgb(0,255,0)`;
-  // this will put border around the circle
-  context.stroke();
+  // draw all the players
+  players.forEach(player => {
+    // tell the context to start drawing
+    context.beginPath();
+    context.fillStyle = player.color;
+    // arguments 1 and 2 are the radius of the circle
+    // argument 3 is the radius of the circle
+    // argument 4 where to start drawing the circle in radians
+    // argument 5 is where to stop drawing the circle in radians
+    context.arc(player.locX, player.locY, 10, 0, Math.PI*2);
+    // fill the circle
+    context.fill();
+    context.lineWidth = 3;
+    context.strokeStyle = `rgb(0,255,0)`;
+    // this will put border around the circle
+    context.stroke();
+  })
 
+  // draw all the orbs
   orbs.forEach(orb => {
       context.beginPath();
       context.fillStyle = orb.color;
@@ -64,17 +64,6 @@ canvas.addEventListener('mousemove', event => {
       yVector = (1 - ((angleDeg+90)/90));
   }
 
-  speed = 10
-  xV = xVector;
-  yV = yVector;
-
-  // move the player along the line of the mouse direction
-  if ((player.locX < 5 && player.xVector < 0) || (player.locX > 500) && (xV > 0)){
-      player.locY -= speed * yV;
-  } else if((player.locY < 5 && yV > 0) || (player.locY > 500) && (yV < 0)){
-      player.locX += speed * xV;
-  } else{
-      player.locX += speed * xV;
-      player.locY -= speed * yV;
-  }    
+  player.xVector = xVector;
+  player.yVector = yVector; 
 });
