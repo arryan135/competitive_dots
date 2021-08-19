@@ -102,10 +102,23 @@ io.sockets.on("connect",  socket => {
       let playerDeath = checkForPlayerCollisions(player.playerData, player.playerConfig, players, player.socketId);
       playerDeath.then(data => {
         io.sockets.emit("updateLeaderBoard", getLeaderBoard()); 
+        // let everyone know that a player was absorbed
+        io.sockets.emit("playerDeath", data);
       }).catch(() => {
 
       })
     } 
+  });
+  socket.on("disconnect", data => {
+    if (player.playerData){
+      // find out which player in players left the game
+      players.forEach((curPlayer, i) => {
+        if (curPlayer.uid == player.playerData.uid){
+          players.splice(i, 1);
+        }
+        io.sockets.emit("updateLeaderBoard", getLeaderBoard()); 
+      });
+    }
   });
 });
 

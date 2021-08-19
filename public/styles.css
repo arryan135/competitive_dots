@@ -106,7 +106,7 @@ canvas{
 }
 
 #join-team-btn, #play-solo-btn, #create-team-btn, #create-play-solo-btn, #add-team-btn{
-	width: 48%;
+	width: 98%;
 	margin: 5px auto 15px;
 	font-size: 18px;	
 	display: inline-block;
