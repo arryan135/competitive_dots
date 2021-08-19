@@ -1,7 +1,7 @@
 const Orb = require('./classes/Orb')
 const io = require('../servers').io;
 
-function checkForOrbCollisions(pData,pConfig, orbs, settings){
+function checkForOrbCollisions(pData, pConfig, orbs, settings){
   return new Promise((resolve, reject)=>{
     //ORB COLLISIONS
     orbs.forEach((orb,i)=>{
@@ -46,12 +46,12 @@ function checkForOrbCollisions(pData,pConfig, orbs, settings){
   });
 }
         
-function checkForPlayerCollisions(pData,pConfig, players){
+function checkForPlayerCollisions(pData, pConfig, players, playerId){
     return new Promise((resolve, reject)=>{
         //PLAYER COLLISIONS	
         players.forEach((curPlayer,i)=>{
             // dont check if the player collides with itself
-            if(curPlayer.uid != pData.uid){
+            if(curPlayer.uid != playerId){
                 // console.log(curPlayer.uid,pData.uid)
                 let pLocx = curPlayer.locX
                 let pLocy = curPlayer.locY
@@ -76,17 +76,17 @@ function checkForPlayerCollisions(pData,pConfig, players){
                             }
                             players.splice(i, 1);
                             resolve(collisionData);
-
-                        }else if(pData.radius < pR){           
-                            let collisionData = updateScores(curPlayer,pData);
-                            players.forEach((p,i)=>{
-                                console.log(players[i].name, i)
-                                if (pData.uid == p.uid){
-                                    players.splice(i, 1);
-                                }
-                            }); 
-                            resolve(collisionData);
-                        }
+                          }
+                        // }else if(pData.radius < pR){           
+                        //     let collisionData = updateScores(curPlayer,pData);
+                        //     players.forEach((p,i)=>{
+                        //         console.log(players[i].name, i)
+                        //         if (pData.uid == p.uid){
+                        //             players.splice(i, 1);
+                        //         }
+                        //     }); 
+                        //     resolve(collisionData);
+                        // }
                     }
                 }
             }

@@ -24,6 +24,7 @@ initGame();
 setInterval(() => {
   // console.log('tock');
   if(players.length > 0) {
+    // tell where the players need to be placed
     io.to('game').emit('tock', {
       players
     });
@@ -41,9 +42,10 @@ io.sockets.on("connect",  socket => {
     let playerData = new PlayerData(data.playerName, settings);
     player = new Player(socket.id, playerConfig, playerData);
 
-    // issue message to every connected socket 30 FPS
+    // issue message to this client with its loc 30 FPS
     setInterval(() => {
       if (player.tickSent){
+        // tell where the camera needs to clamp for the user
         socket.emit('tickTock', {
           playerX: player.playerData.locX,
           playerY: player.playerData.locY,
@@ -86,16 +88,37 @@ io.sockets.on("connect",  socket => {
           orbIndex: data,
           newOrb: orbs[data]
         }
-        
+        io.emit("updateIndividualScore", player.playerData.score);
+        // every socket needs to know that the leaderboard has changed
+        io.sockets.emit("updateLeaderBoard", getLeaderBoard()); 
         // emit to all sockets the orb that needs to be replaced
         io.sockets.emit("orbSwitch", orbData);
       }). catch(() => {
         // runs if reject runs, no coliision happened
         
+      });
+
+      // Player Collison
+      let playerDeath = checkForPlayerCollisions(player.playerData, player.playerConfig, players, player.socketId);
+      playerDeath.then(data => {
+        io.sockets.emit("updateLeaderBoard", getLeaderBoard()); 
+      }).catch(() => {
+
       })
     } 
   });
 });
+
+function getLeaderBoard(){
+  // sort players in desc order
+  players.sort((a, b) => b.score - a.score);
+  let leaderBoard = players.map(curPlayer => ({
+    name: curPlayer.name,
+    score: curPlayer.score
+  }));
+
+  return leaderBoard;
+}
 
 // begin at the start of every game
 function initGame(){
